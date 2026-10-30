@@ -18,7 +18,7 @@ def as_utc(dt: datetime | None) -> datetime | None:
 
 
 def _db_url() -> str:
-    url = os.environ.get("DATABASE_URL", "sqlite:///./local.db")
+    url = os.environ.get("DATABASE_URL") or "sqlite:///./local.db"
     if url.startswith("postgres://"):
         url = "postgresql://" + url[len("postgres://"):]
     if url.startswith("postgresql://"):
