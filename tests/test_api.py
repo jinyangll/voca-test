@@ -7,6 +7,7 @@ os.environ["JWT_SECRET"] = "test-jwt-secret"
 
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
+from sqlalchemy import text  # noqa: E402
 
 from backend import grading, llm  # noqa: E402
 from backend.db import Base, engine  # noqa: E402
@@ -145,3 +146,18 @@ def test_copy_and_delete_keeps_attempts(monkeypatch):
     client.delete(f"/api/admin/wordbooks/{book}", headers=h)
     attempts = client.get("/api/admin/attempts", headers=h).json()
     assert len(attempts) == 1 and attempts[0]["wordbook_id"] is None
+
+
+def test_delete_attempt():
+    h = login()
+    book = make_book(h, [{"english": "apple", "meanings": "사과"}])
+    wid = client.get(f"/api/exam/wordbooks/{book}").json()["words"][0]["id"]
+    r = client.post("/api/exam/submit", json={"wordbook_id": book, "answers": [
+        {"word_id": wid, "answer": "사과"}]}).json()
+
+    assert client.delete(f"/api/admin/attempts/{r['attempt_id']}").status_code == 401
+    assert client.delete(f"/api/admin/attempts/{r['attempt_id']}", headers=h).status_code == 200
+    assert client.get("/api/admin/attempts", headers=h).json() == []
+    assert client.get(f"/api/admin/attempts/{r['attempt_id']}", headers=h).status_code == 404
+    with engine.connect() as conn:
+        assert conn.execute(text("select count(*) from answers")).scalar() == 0

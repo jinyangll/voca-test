@@ -259,6 +259,13 @@ def get_attempt(attempt_id: int, db: Session = Depends(get_db)):
     return {**attempt_summary(a), "answers": [answer_out(x) for x in a.answers]}
 
 
+@app.delete("/api/admin/attempts/{attempt_id}", dependencies=admin)
+def delete_attempt(attempt_id: int, db: Session = Depends(get_db)):
+    db.delete(get_or_404(db, Attempt, attempt_id))  # 문항별 답도 cascade로 함께 삭제
+    db.commit()
+    return {"ok": True}
+
+
 @app.patch("/api/admin/answers/{answer_id}", dependencies=admin)
 def correct_answer(answer_id: int, body: AnswerPatch, db: Session = Depends(get_db)):
     x = get_or_404(db, Answer, answer_id)

@@ -13,6 +13,15 @@ export default function AdminAttempts() {
     api(`/admin/attempts${q}`, { admin: true }).then(setAttempts).catch((e) => setError(e.message))
   }, [wordbookId])
 
+  async function remove(a) {
+    if (!window.confirm('정말 삭제하시겠습니까?')) return
+    setError('')
+    try {
+      await api(`/admin/attempts/${a.id}`, { method: 'DELETE', admin: true })
+      setAttempts((list) => list.filter((x) => x.id !== a.id))
+    } catch (e) { setError(e.message) }
+  }
+
   return (
     <>
       <h1 className="admin-title">응시 기록</h1>
@@ -42,7 +51,10 @@ export default function AdminAttempts() {
                     {a.needs_review && <span className="badge badge-warn">채점 확인 필요</span>}
                     {a.left_tab_count > 0 && <span className="badge badge-alert">탭 이탈 {a.left_tab_count}문항</span>}
                   </td>
-                  <td><Link to={`/admin/attempts/${a.id}`} className="strong-link">자세히</Link></td>
+                  <td className="actions">
+                    <Link to={`/admin/attempts/${a.id}`} className="strong-link">자세히</Link>
+                    <button className="link-btn danger" onClick={() => remove(a)}>삭제</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
