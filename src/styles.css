@@ -104,15 +104,7 @@ input, textarea { font: inherit; color: var(--ink); }
   width: 100%;
   max-width: 460px;
 }
-.home-word {
-  font-family: var(--font-en);
-  font-weight: 700;
-  font-size: 72px;
-  line-height: 1;
-  margin: 0;
-  letter-spacing: 0.04em;
-  color: var(--pink-deep);
-}
+.home-gif { display: block; width: 160px; height: 160px; object-fit: contain; margin: 0 auto; }
 .home h1 { font-size: 42px; font-weight: 400; margin: 12px 0 4px; }
 .home .muted { margin: 0 0 32px; }
 .corner-link { position: absolute; bottom: 24px; color: var(--ink-soft); font-size: 15px; }
@@ -186,6 +178,31 @@ input, textarea { font: inherit; color: var(--ink); }
   text-align: center;
   overflow-wrap: anywhere;
 }
+.modal {
+  padding: 0;
+  width: min(420px, calc(100vw - 32px));
+  border: 3px solid var(--ink);
+  border-radius: 28px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 8px 8px 0 var(--pink-shadow);
+}
+.modal[open] { animation: pop-in 0.18s ease-out; }
+.modal::backdrop { background: rgba(43, 45, 92, 0.35); }
+.modal-body { padding: 28px 24px 24px; text-align: center; }
+.modal-gif { display: block; width: 120px; height: auto; margin: 0 auto 8px; }
+.modal-title { font-size: 26px; margin: 0 0 8px; }
+.modal-body .muted { margin: 0 0 24px; }
+.modal-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+@keyframes pop-in {
+  from { transform: scale(0.94); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+.intro { padding-top: 12vh; transition: opacity 0.6s ease, filter 0.6s ease; }
+.intro-out { opacity: 0; filter: blur(8px); }
+.intro-gif { display: block; width: min(282px, 80vw); height: auto; margin: 0 auto 16px; }
+
 @keyframes card-in {
   from { transform: translateY(6px); opacity: 0.4; }
   to { transform: none; opacity: 1; }

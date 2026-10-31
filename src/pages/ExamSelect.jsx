@@ -1,12 +1,26 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { api } from '../api'
-import { loadProgress } from '../progress'
+import { clearProgress, loadProgress } from '../progress'
 
 export default function ExamSelect() {
   const [books, setBooks] = useState(null)
   const [error, setError] = useState('')
   const saved = loadProgress()
+  const navigate = useNavigate()
+  const dialogRef = useRef(null)
+
+  // 풀던 단어장을 목록에서 다시 누르면 이어 풀지 새로 볼지 묻는다
+  function startBook(e, b) {
+    if (saved?.wordbookId !== b.id) return
+    e.preventDefault()
+    dialogRef.current.showModal()
+  }
+
+  function startNew() {
+    clearProgress()
+    navigate(`/exam/${saved.wordbookId}`)
+  }
 
   useEffect(() => {
     api('/exam/wordbooks').then(setBooks).catch((e) => setError(e.message))
@@ -33,13 +47,31 @@ export default function ExamSelect() {
       <ul className="book-list">
         {books?.map((b) => (
           <li key={b.id}>
-            <Link to={`/exam/${b.id}`} className="book">
+            <Link to={`/exam/${b.id}`} className="book" onClick={(e) => startBook(e, b)}>
               <span className="book-name">{b.name}</span>
               <span className="book-meta">{b.word_count}문제 · 문제당 {b.time_limit}초</span>
             </Link>
           </li>
         ))}
       </ul>
+
+      {saved && (
+        // 바깥(어두운 배경)을 누르거나 Esc를 누르면 닫힘
+        <dialog ref={dialogRef} className="modal" onClick={(e) => { if (e.target === e.currentTarget) e.currentTarget.close() }}>
+          <div className="modal-body">
+            <img className="modal-gif" src="/gifs/pop_hamnyangto.gif" alt="" />
+            <p className="modal-title">풀던 시험이 있어요</p>
+            <p className="muted">
+              <b>{saved.name}</b> {saved.words.length}문제 중 {saved.index}문제를 풀었어요.<br />
+              새로 시작하면 풀던 내용은 사라져요.
+            </p>
+            <div className="modal-actions">
+              <button className="btn btn-soft" onClick={() => navigate(`/exam/${saved.wordbookId}`)}>이어서 풀기</button>
+              <button className="btn" onClick={startNew}>새로 시작하기</button>
+            </div>
+          </div>
+        </dialog>
+      )}
     </main>
   )
 }

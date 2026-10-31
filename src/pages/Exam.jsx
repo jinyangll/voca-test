@@ -5,6 +5,9 @@ import { clearProgress, loadProgress, saveProgress } from '../progress'
 
 // progress: { wordbookId, name, timeLimit, words: [{id, english}], index, answers, startedAt, deadline, leftTab }
 
+const INTRO_GIF_MS = 1900 // magical_chii.gif 한 바퀴 길이
+const INTRO_FADE_MS = 600 // styles.css .intro 의 transition 과 맞춤
+
 export default function Exam() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -16,6 +19,10 @@ export default function Exam() {
   const inputValueRef = useRef('')
   const inputRef = useRef(null)
   const submittingRef = useRef(false)
+  const loadedRef = useRef(null) // 받아온 단어장 (인트로가 끝나면 시험 시작)
+  const [loaded, setLoaded] = useState(false)
+  const [introPlayed, setIntroPlayed] = useState(false)
+  const [fading, setFading] = useState(false)
 
   const update = useCallback((next) => {
     progressRef.current = next
@@ -33,16 +40,25 @@ export default function Exam() {
       return
     }
     api(`/exam/wordbooks/${id}`)
-      .then((d) => {
-        update({
-          wordbookId: d.id, name: d.name, timeLimit: d.time_limit, words: d.words,
-          index: 0, answers: [], startedAt: new Date().toISOString(),
-          deadline: Date.now() + d.time_limit * 1000, leftTab: false,
-        })
-        setPhase('question')
-      })
+      .then((d) => { loadedRef.current = d; setLoaded(true) })
       .catch((e) => { setError(e.message); setPhase('error') })
   }, [id, update])
+
+  // 인트로 GIF가 한 바퀴 돌고 단어도 받아왔으면 흐려지며 사라진 뒤 시험 시작 (타이머는 이때부터)
+  useEffect(() => {
+    if (phase !== 'loading' || !loaded || !introPlayed) return
+    setFading(true)
+    const t = setTimeout(() => {
+      const d = loadedRef.current
+      update({
+        wordbookId: d.id, name: d.name, timeLimit: d.time_limit, words: d.words,
+        index: 0, answers: [], startedAt: new Date().toISOString(),
+        deadline: Date.now() + d.time_limit * 1000, leftTab: false,
+      })
+      setPhase('question')
+    }, INTRO_FADE_MS)
+    return () => clearTimeout(t)
+  }, [phase, loaded, introPlayed, update])
 
   const advance = useCallback((answer, dontKnow) => {
     const p = progressRef.current
@@ -117,7 +133,23 @@ export default function Exam() {
     advance(value, false)
   }
 
-  if (phase === 'loading') return <main className="kid-page"><p className="muted center">시험지를 준비하는 중…</p></main>
+  if (phase === 'loading') {
+    // GIF를 다 받은 뒤부터 한 바퀴를 센다. 못 불러오면 바로 넘어간다
+    return (
+      <main className="kid-page center">
+        <div className={`intro${fading ? ' intro-out' : ''}`}>
+          <img
+            className="intro-gif"
+            src="/gifs/magical_chii.gif"
+            alt=""
+            onLoad={() => setTimeout(() => setIntroPlayed(true), INTRO_GIF_MS)}
+            onError={() => setIntroPlayed(true)}
+          />
+          <p className="muted">시험지를 준비하는 중…</p>
+        </div>
+      </main>
+    )
+  }
   if (phase === 'error') {
     return (
       <main className="kid-page">
