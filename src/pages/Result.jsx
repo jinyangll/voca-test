@@ -1,12 +1,5 @@
 import { Link, Navigate, useLocation } from 'react-router-dom'
 
-function stampText(pct) {
-  if (pct >= 90) return '참 잘했어요'
-  if (pct >= 70) return '잘했어요'
-  if (pct >= 50) return '조금만 더!'
-  return '다시 도전!'
-}
-
 export default function Result() {
   const { state: result } = useLocation()
   if (!result) return <Navigate to="/" replace />
@@ -23,9 +16,6 @@ export default function Result() {
           <span className="score-total">/ {result.total}</span>
         </p>
         <p className="score-pct">{pct}점</p>
-        <div className={`stamp ${pct >= 70 ? 'stamp-good' : 'stamp-try'}`} aria-label={stampText(pct)}>
-          {stampText(pct)}
-        </div>
       </section>
 
       {needsReview && (

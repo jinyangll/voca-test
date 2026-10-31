@@ -154,6 +154,14 @@ export default function Exam() {
         </span>
       </header>
 
+      <div className="timer" role="presentation">
+        <div
+          key={`${progress.index}-${progress.deadline}`}
+          className="timer-fill"
+          style={{ animationDuration: `${total}ms`, animationDelay: `-${elapsed}ms` }}
+        />
+      </div>
+
       <section className="word-card" key={progress.index}>
         <p className="word">{word.english}</p>
       </section>
@@ -178,14 +186,6 @@ export default function Exam() {
         >
           모르겠어요
         </button>
-      </div>
-
-      <div className="timer" role="presentation">
-        <div
-          key={`${progress.index}-${progress.deadline}`}
-          className="timer-fill"
-          style={{ animationDuration: `${total}ms`, animationDelay: `-${elapsed}ms` }}
-        />
       </div>
     </main>
   )

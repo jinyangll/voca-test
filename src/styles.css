@@ -1,14 +1,16 @@
 :root {
-  --sky: #e6f2ff;
+  --beige: #f8efe2;
   --paper: #ffffff;
   --ink: #2b2d5c;
   --ink-soft: #6b6f9e;
-  --lavender: #b6a6ff;
+  --pink: #ffe1e1;
+  --pink-shadow: #f9c2c2;
+  --pink-deep: #f48fb5;
   --lavender-deep: #8c78f0;
   --butter: #ffe07a;
   --mint: #7fdbb6;
   --pen: #ef4f6e;
-  --line: #d3def0;
+  --line: #e6d9c6;
 
   --font-ko: 'Jua', system-ui, sans-serif;
   --font-en: 'Fredoka', 'Jua', system-ui, sans-serif;
@@ -18,7 +20,7 @@
 
 body {
   margin: 0;
-  background: var(--sky);
+  background: var(--beige);
   color: var(--ink);
   font-family: var(--font-ko);
   font-size: 18px;
@@ -43,7 +45,7 @@ input, textarea { font: inherit; color: var(--ink); }
   display: inline-block;
   border: 3px solid var(--ink);
   border-radius: 999px;
-  background: var(--lavender);
+  background: var(--pink);
   color: var(--ink);
   padding: 10px 26px;
   font-size: 20px;
@@ -98,7 +100,7 @@ input, textarea { font: inherit; color: var(--ink); }
   border: 3px solid var(--ink);
   border-radius: 32px;
   padding: 40px 32px 48px;
-  box-shadow: 8px 8px 0 var(--lavender);
+  box-shadow: 8px 8px 0 var(--pink-shadow);
   width: 100%;
   max-width: 460px;
 }
@@ -109,7 +111,7 @@ input, textarea { font: inherit; color: var(--ink); }
   line-height: 1;
   margin: 0;
   letter-spacing: 0.04em;
-  color: var(--lavender-deep);
+  color: var(--pink-deep);
 }
 .home h1 { font-size: 42px; font-weight: 400; margin: 12px 0 4px; }
 .home .muted { margin: 0 0 32px; }
@@ -154,7 +156,7 @@ input, textarea { font: inherit; color: var(--ink); }
   text-decoration: none;
   box-shadow: 0 4px 0 var(--ink);
 }
-.book:hover { background: #f6f3ff; }
+.book:hover { background: #fff7f6; }
 .book-name { font-size: 26px; }
 .book-meta { color: var(--ink-soft); font-size: 16px; }
 
@@ -169,7 +171,7 @@ input, textarea { font: inherit; color: var(--ink); }
   background: var(--paper);
   border: 3px solid var(--ink);
   border-radius: 32px;
-  box-shadow: 8px 8px 0 var(--lavender);
+  box-shadow: 8px 8px 0 var(--pink-shadow);
   min-height: 220px;
   display: grid;
   place-items: center;
@@ -204,11 +206,6 @@ input, textarea { font: inherit; color: var(--ink); }
 .answer-input:focus { box-shadow: 0 0 0 5px var(--butter); }
 
 .timer {
-  position: fixed;
-  left: 50%;
-  bottom: 28px;
-  transform: translateX(-50%);
-  width: min(688px, calc(100% - 32px));
   height: 22px;
   border: 3px solid var(--ink);
   border-radius: 999px;
@@ -238,44 +235,18 @@ input, textarea { font: inherit; color: var(--ink); }
 /* 결과: 빨간 펜 채점 + 도장 */
 
 .score-sheet {
-  position: relative;
   background: var(--paper);
   border: 3px solid var(--ink);
   border-radius: 32px;
   padding: 28px 24px 24px;
   text-align: center;
-  box-shadow: 8px 8px 0 var(--lavender);
+  box-shadow: 8px 8px 0 var(--pink-shadow);
 }
 .score-sheet .muted { margin: 0; }
 .score { margin: 4px 0 0; font-family: var(--font-en); line-height: 1; }
 .score-num { font-size: 96px; font-weight: 700; color: var(--pen); }
 .score-total { font-size: 36px; color: var(--ink-soft); margin-left: 6px; }
 .score-pct { margin: 6px 0 0; font-size: 22px; }
-
-.stamp {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  width: 112px;
-  height: 112px;
-  border-radius: 50%;
-  border: 5px double var(--pen);
-  color: var(--pen);
-  display: grid;
-  place-items: center;
-  text-align: center;
-  font-size: 22px;
-  line-height: 1.1;
-  padding: 10px;
-  transform: rotate(-14deg);
-  background: rgba(255, 255, 255, 0.85);
-  animation: stamp 0.45s cubic-bezier(0.2, 1.6, 0.4, 1) 0.4s both;
-}
-.stamp-try { border-color: var(--lavender-deep); color: var(--lavender-deep); }
-@keyframes stamp {
-  from { transform: rotate(-14deg) scale(2.4); opacity: 0; }
-  to { transform: rotate(-14deg) scale(1); opacity: 1; }
-}
 
 .notice {
   background: var(--butter);
@@ -351,7 +322,7 @@ input, textarea { font: inherit; color: var(--ink); }
 }
 .admin-bar nav { display: flex; gap: 20px; }
 .admin-bar nav a { color: var(--ink-soft); text-decoration: none; font-size: 18px; }
-.admin-bar nav a.active { color: var(--ink); border-bottom: 3px solid var(--lavender); }
+.admin-bar nav a.active { color: var(--ink); border-bottom: 3px solid var(--pink); }
 .admin-main { max-width: 1040px; margin: 0 auto; padding: 24px 16px 64px; }
 .admin-title { font-size: 28px; font-weight: 400; margin: 0 0 12px; }
 
@@ -408,7 +379,6 @@ input, textarea { font: inherit; color: var(--ink); }
 .switch input:focus-visible + span { outline: 3px solid var(--lavender-deep); outline-offset: 2px; }
 
 @media (max-width: 560px) {
-  .stamp { position: static; margin: 16px auto 0; }
   .marks li { grid-template-columns: 36px 1fr; grid-template-areas: 'mark word' 'mark answer' 'mark key'; }
 }
 
