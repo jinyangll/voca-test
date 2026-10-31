@@ -105,6 +105,8 @@ input, textarea { font: inherit; color: var(--ink); }
   max-width: 460px;
 }
 .home-gif { display: block; width: 160px; height: 160px; object-fit: contain; margin: 0 auto; }
+/* 1.15배 키우고 사방 6.52%를 잘라 보이는 크기는 160px 그대로 (inset = (1 - 1/배율) / 2) */
+.home-gif.zoom { transform: scale(1.15); clip-path: inset(6.522%); }
 .home h1 { font-size: 42px; font-weight: 400; margin: 12px 0 4px; }
 .home .muted { margin: 0 0 32px; }
 .corner-link { position: absolute; bottom: 24px; color: var(--ink-soft); font-size: 15px; }

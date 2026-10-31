@@ -9,3 +9,4 @@ local.db
 test.db
 .vercel
 .pytest_cache/
+/gifs/
